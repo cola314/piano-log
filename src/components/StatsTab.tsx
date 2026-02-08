@@ -17,10 +17,10 @@ export function StatsTab({ data, weeklyStats, onDataImport }: StatsTabProps) {
       {/* Weekly Breakdown */}
       <div style={{
         marginBottom: "24px", padding: "20px",
-        background: "rgba(184,134,11,0.06)", borderRadius: "12px",
+        background: "rgba(184,134,11,0.1)", borderRadius: "12px",
         border: "1px solid rgba(184,134,11,0.12)",
       }}>
-        <div style={{ fontSize: "11px", letterSpacing: "3px", color: "#6B5B45", marginBottom: "16px" }}>
+        <div style={{ fontSize: "11px", letterSpacing: "3px", color: "#8B7B65", marginBottom: "16px" }}>
           주간 연습 시간
         </div>
         {CATEGORIES.map((cat) => {
@@ -37,7 +37,7 @@ export function StatsTab({ data, weeklyStats, onDataImport }: StatsTabProps) {
                   {mins}분 / {maxMins}분
                 </span>
               </div>
-              <div style={{ height: "6px", background: "rgba(0,0,0,0.3)", borderRadius: "3px", overflow: "hidden" }}>
+              <div style={{ height: "6px", background: "rgba(255,255,255,0.1)", borderRadius: "3px", overflow: "hidden" }}>
                 <div style={{
                   height: "100%", width: `${pct}%`,
                   background: `linear-gradient(90deg, ${cat.color}88, ${cat.color})`,
@@ -52,10 +52,10 @@ export function StatsTab({ data, weeklyStats, onDataImport }: StatsTabProps) {
       {/* 7-Day Heatmap */}
       <div style={{
         marginBottom: "24px", padding: "20px",
-        background: "rgba(184,134,11,0.06)", borderRadius: "12px",
+        background: "rgba(184,134,11,0.1)", borderRadius: "12px",
         border: "1px solid rgba(184,134,11,0.12)",
       }}>
-        <div style={{ fontSize: "11px", letterSpacing: "3px", color: "#6B5B45", marginBottom: "16px" }}>
+        <div style={{ fontSize: "11px", letterSpacing: "3px", color: "#8B7B65", marginBottom: "16px" }}>
           최근 7일
         </div>
         <div style={{ display: "flex", gap: "6px", justifyContent: "center" }}>
@@ -68,15 +68,15 @@ export function StatsTab({ data, weeklyStats, onDataImport }: StatsTabProps) {
             const dayNames = ["일", "월", "화", "수", "목", "금", "토"];
             return (
               <div key={i} style={{ textAlign: "center", flex: 1 }}>
-                <div style={{ fontSize: "10px", color: "#5A4E3A", marginBottom: "6px" }}>
+                <div style={{ fontSize: "10px", color: "#7A6E5A", marginBottom: "6px" }}>
                   {dayNames[d.getDay()]}
                 </div>
                 <div style={{
                   aspectRatio: "1", borderRadius: "6px",
-                  background: total > 0 ? `rgba(184,134,11,${0.15 + intensity * 0.6})` : "rgba(0,0,0,0.2)",
+                  background: total > 0 ? `rgba(184,134,11,${0.15 + intensity * 0.6})` : "rgba(255,255,255,0.08)",
                   display: "flex", alignItems: "center", justifyContent: "center",
                   fontSize: "11px",
-                  color: total > 0 ? "#F5E6C8" : "#3D3525",
+                  color: total > 0 ? "#F5E6C8" : "#5D5545",
                   fontFamily: "'Crimson Pro', serif",
                   border: getDayKey(d) === todayKey ? "1px solid rgba(184,134,11,0.5)" : "none",
                 }}>
@@ -91,10 +91,10 @@ export function StatsTab({ data, weeklyStats, onDataImport }: StatsTabProps) {
       {/* Monthly Summary */}
       <div style={{
         padding: "20px",
-        background: "rgba(184,134,11,0.06)", borderRadius: "12px",
+        background: "rgba(184,134,11,0.1)", borderRadius: "12px",
         border: "1px solid rgba(184,134,11,0.12)",
       }}>
-        <div style={{ fontSize: "11px", letterSpacing: "3px", color: "#6B5B45", marginBottom: "16px" }}>
+        <div style={{ fontSize: "11px", letterSpacing: "3px", color: "#8B7B65", marginBottom: "16px" }}>
           이번 달 요약
         </div>
         <MonthlySummary data={data} />
@@ -132,7 +132,7 @@ function SummaryItem({ value, label }: { value: number; label: string }) {
   return (
     <div>
       <div style={{ fontSize: "28px", fontWeight: "300", color: "#B8860B", fontFamily: "'Crimson Pro', serif" }}>{value}</div>
-      <div style={{ fontSize: "10px", color: "#6B5B45", letterSpacing: "1px", marginTop: "4px" }}>{label}</div>
+      <div style={{ fontSize: "10px", color: "#8B7B65", letterSpacing: "1px", marginTop: "4px" }}>{label}</div>
     </div>
   );
 }
@@ -179,10 +179,10 @@ function DataManagement({ data, onDataImport }: { data: PracticeData; onDataImpo
   return (
     <div style={{
       marginTop: "24px", padding: "20px",
-      background: "rgba(184,134,11,0.06)", borderRadius: "12px",
+      background: "rgba(184,134,11,0.1)", borderRadius: "12px",
       border: "1px solid rgba(184,134,11,0.12)",
     }}>
-      <div style={{ fontSize: "11px", letterSpacing: "3px", color: "#6B5B45", marginBottom: "16px" }}>
+      <div style={{ fontSize: "11px", letterSpacing: "3px", color: "#8B7B65", marginBottom: "16px" }}>
         데이터 관리
       </div>
       <div style={{ display: "flex", gap: "10px" }}>
@@ -196,7 +196,7 @@ function DataManagement({ data, onDataImport }: { data: PracticeData; onDataImpo
         </button>
         <button onClick={() => fileRef.current?.click()} style={{
           flex: 1, padding: "12px",
-          background: "rgba(0,0,0,0.2)", border: "1px solid rgba(184,134,11,0.15)",
+          background: "rgba(255,255,255,0.08)", border: "1px solid rgba(184,134,11,0.15)",
           borderRadius: "8px", color: "#8B7355", fontSize: "12px",
           cursor: "pointer", fontFamily: "'Noto Serif KR', serif", letterSpacing: "1px",
         }}>

@@ -117,7 +117,7 @@ export default function PracticeTracker() {
   return (
     <div style={{
       minHeight: "100vh",
-      background: "linear-gradient(160deg, #1a1207 0%, #2a1f0e 30%, #1e1e2e 70%, #0f0f1a 100%)",
+      background: "#000",
       fontFamily: "'Noto Serif KR', 'Georgia', serif",
       color: "#E8DCC8",
     }}>

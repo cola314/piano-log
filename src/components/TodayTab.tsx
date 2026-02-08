@@ -18,6 +18,8 @@ interface TodayTabProps {
     totalElapsed: number;
     totalTarget: number;
     getRemaining: (catId: string) => number;
+    notificationPermission: NotificationPermission;
+    requestNotificationPermission: () => Promise<NotificationPermission>;
   };
   weekKey: string;
   monthKey: string;
@@ -26,7 +28,7 @@ interface TodayTabProps {
 }
 
 export function TodayTab({ data, timer, weekKey, monthKey, onOpenGoalModal, onTabChange }: TodayTabProps) {
-  const { activeCat, elapsed, targets, running, note, setNote, toggle, reset, setTarget, saveToLog, totalElapsed, totalTarget, getRemaining } = timer;
+  const { activeCat, elapsed, targets, running, note, setNote, toggle, reset, setTarget, saveToLog, totalElapsed, totalTarget, getRemaining, notificationPermission, requestNotificationPermission } = timer;
 
   // Check goal status
   const goalStatus = CATEGORIES.map((cat) => {
@@ -59,6 +61,11 @@ export function TodayTab({ data, timer, weekKey, monthKey, onOpenGoalModal, onTa
       {/* Today's Goals */}
       <GoalStatusCard goalStatus={goalStatus} onOpenGoalModal={onOpenGoalModal} onTabChange={onTabChange} />
 
+      {/* Notification Permission */}
+      {notificationPermission === "default" && (
+        <NotificationBanner onRequest={requestNotificationPermission} />
+      )}
+
       {/* Total Timer Display */}
       <TotalDisplay
         totalTarget={totalTarget}
@@ -87,7 +94,7 @@ export function TodayTab({ data, timer, weekKey, monthKey, onOpenGoalModal, onTa
         <div style={{
           marginTop: "24px",
           padding: "20px",
-          background: "rgba(184,134,11,0.06)",
+          background: "rgba(184,134,11,0.1)",
           borderRadius: "12px",
           border: "1px solid rgba(184,134,11,0.12)",
         }}>
@@ -98,7 +105,7 @@ export function TodayTab({ data, timer, weekKey, monthKey, onOpenGoalModal, onTa
             rows={2}
             style={{
               width: "100%",
-              background: "rgba(0,0,0,0.2)",
+              background: "rgba(255,255,255,0.08)",
               border: "1px solid rgba(184,134,11,0.15)",
               borderRadius: "8px",
               padding: "10px",
@@ -130,7 +137,7 @@ export function TodayTab({ data, timer, weekKey, monthKey, onOpenGoalModal, onTa
           >
             연습 완료 · 저장하기
           </button>
-          <div style={{ marginTop: "8px", fontSize: "11px", color: "#5A4E3A", textAlign: "center" }}>
+          <div style={{ marginTop: "8px", fontSize: "11px", color: "#7A6E5A", textAlign: "center" }}>
             하농 {Math.round(elapsed.hanon / 60)}분 · 체르니 {Math.round(elapsed.czerny / 60)}분 · 소나티네 {Math.round(elapsed.sonatine / 60)}분으로 기록됩니다
           </div>
         </div>
@@ -153,11 +160,11 @@ function TotalDisplay({ totalTarget, totalElapsed, running, activeCat }: {
       textAlign: "center",
       marginBottom: "28px",
       padding: "24px",
-      background: "rgba(184,134,11,0.06)",
+      background: "rgba(184,134,11,0.1)",
       borderRadius: "16px",
       border: "1px solid rgba(184,134,11,0.12)",
     }}>
-      <div style={{ fontSize: "10px", letterSpacing: "3px", color: "#6B5B45", marginBottom: "10px" }}>
+      <div style={{ fontSize: "10px", letterSpacing: "3px", color: "#8B7B65", marginBottom: "10px" }}>
         총 남은 시간
       </div>
       <div style={{
@@ -171,7 +178,7 @@ function TotalDisplay({ totalTarget, totalElapsed, running, activeCat }: {
         {isOvertime && <span style={{ fontSize: "24px", verticalAlign: "middle", marginRight: "4px", color: "#C0392B" }}>+</span>}
         {formatTimer(Math.abs(totalRemaining))}
       </div>
-      <div style={{ marginTop: "6px", fontSize: "11px", color: "#5A4E3A" }}>
+      <div style={{ marginTop: "6px", fontSize: "11px", color: "#7A6E5A" }}>
         경과 {formatTimer(totalElapsed)} / 목표 {formatTimer(totalTarget)}
       </div>
       {running && activeCat && (
@@ -209,7 +216,7 @@ function CategoryTimer({ cat, isActive, elapsed, remaining, targetSecs, onToggle
       padding: "16px 20px",
       background: isActive
         ? `linear-gradient(135deg, ${cat.color}18 0%, ${cat.color}08 100%)`
-        : "rgba(0,0,0,0.15)",
+        : "rgba(255,255,255,0.06)",
       borderRadius: "12px",
       border: isOvertime && elapsed > 0
         ? "1px solid rgba(192,57,43,0.3)"
@@ -228,7 +235,7 @@ function CategoryTimer({ cat, isActive, elapsed, remaining, targetSecs, onToggle
           </div>
           <div>
             <div style={{ fontSize: "14px", fontWeight: "500" }}>{cat.name}</div>
-            <div style={{ fontSize: "10px", color: "#6B5B45", marginTop: "2px" }}>목표 {targetMin}분</div>
+            <div style={{ fontSize: "10px", color: "#8B7B65", marginTop: "2px" }}>목표 {targetMin}분</div>
           </div>
         </div>
 
@@ -238,13 +245,13 @@ function CategoryTimer({ cat, isActive, elapsed, remaining, targetSecs, onToggle
               fontSize: "22px", fontFamily: "'Crimson Pro', serif",
               color: isOvertime && elapsed > 0 ? "#C0392B"
                 : isActive ? "#F5E6C8"
-                : remaining < targetSecs && elapsed > 0 ? "#B8860B" : "#4A3F30",
+                : remaining < targetSecs && elapsed > 0 ? "#B8860B" : "#6A5F50",
               letterSpacing: "2px", fontWeight: isActive ? "500" : "300",
             }}>
               {isOvertime && elapsed > 0 ? "+" : ""}{formatTimer(Math.abs(remaining))}
             </div>
             {elapsed > 0 && (
-              <div style={{ fontSize: "9px", color: "#5A4E3A", marginTop: "1px" }}>
+              <div style={{ fontSize: "9px", color: "#7A6E5A", marginTop: "1px" }}>
                 경과 {formatTimer(elapsed)}
               </div>
             )}
@@ -253,7 +260,7 @@ function CategoryTimer({ cat, isActive, elapsed, remaining, targetSecs, onToggle
             <button onClick={onToggle} style={{
               width: "36px", height: "36px", borderRadius: "50%",
               border: `1.5px solid ${isActive ? cat.color : "rgba(184,134,11,0.2)"}`,
-              background: isActive ? `${cat.color}25` : "rgba(0,0,0,0.2)",
+              background: isActive ? `${cat.color}25` : "rgba(255,255,255,0.08)",
               color: isActive ? "#F5E6C8" : "#8B7355",
               fontSize: "14px", cursor: "pointer",
               display: "flex", alignItems: "center", justifyContent: "center",
@@ -265,7 +272,7 @@ function CategoryTimer({ cat, isActive, elapsed, remaining, targetSecs, onToggle
               <button onClick={onReset} style={{
                 width: "36px", height: "36px", borderRadius: "50%",
                 border: "1.5px solid rgba(184,134,11,0.15)",
-                background: "rgba(0,0,0,0.2)", color: "#6B5B45", fontSize: "12px",
+                background: "rgba(255,255,255,0.08)", color: "#8B7B65", fontSize: "12px",
                 cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center",
               }}>
                 ↺
@@ -276,7 +283,7 @@ function CategoryTimer({ cat, isActive, elapsed, remaining, targetSecs, onToggle
       </div>
 
       {/* Progress bar */}
-      <div style={{ marginTop: "12px", height: "4px", background: "rgba(0,0,0,0.3)", borderRadius: "2px", overflow: "hidden" }}>
+      <div style={{ marginTop: "12px", height: "4px", background: "rgba(255,255,255,0.1)", borderRadius: "2px", overflow: "hidden" }}>
         <div style={{
           height: "100%",
           width: `${Math.min(progress, 100)}%`,
@@ -293,7 +300,7 @@ function CategoryTimer({ cat, isActive, elapsed, remaining, targetSecs, onToggle
               padding: "4px 10px", borderRadius: "4px",
               border: targetMin === m ? `1px solid ${cat.color}` : "1px solid rgba(184,134,11,0.1)",
               background: targetMin === m ? `${cat.color}20` : "transparent",
-              color: targetMin === m ? "#F5E6C8" : "#5A4E3A",
+              color: targetMin === m ? "#F5E6C8" : "#7A6E5A",
               fontSize: "11px", cursor: "pointer", fontFamily: "'Crimson Pro', serif",
               transition: "all 0.15s",
             }}>
@@ -306,11 +313,35 @@ function CategoryTimer({ cat, isActive, elapsed, remaining, targetSecs, onToggle
   );
 }
 
+function NotificationBanner({ onRequest }: { onRequest: () => void }) {
+  return (
+    <div style={{
+      marginBottom: "16px", padding: "12px 16px",
+      background: "rgba(184,134,11,0.1)",
+      borderRadius: "10px",
+      border: "1px solid rgba(184,134,11,0.2)",
+      display: "flex", alignItems: "center", justifyContent: "space-between", gap: "12px",
+    }}>
+      <div style={{ fontSize: "12px", color: "#8B7B65", lineHeight: "1.4" }}>
+        알림을 허용하면 화면이 꺼져도<br />연습 완료 알림을 받을 수 있어요
+      </div>
+      <button onClick={onRequest} style={{
+        padding: "8px 14px", borderRadius: "6px",
+        background: "rgba(184,134,11,0.2)", border: "1px solid rgba(184,134,11,0.3)",
+        color: "#F5E6C8", fontSize: "11px", cursor: "pointer",
+        fontFamily: "'Noto Serif KR', serif", whiteSpace: "nowrap", flexShrink: 0,
+      }}>
+        알림 허용
+      </button>
+    </div>
+  );
+}
+
 function OnboardingGuard({ onOpenGoalModal, onTabChange }: { onOpenGoalModal: () => void; onTabChange: (tab: string) => void }) {
   return (
     <div style={{
       padding: "32px 24px",
-      background: "rgba(184,134,11,0.06)",
+      background: "rgba(184,134,11,0.1)",
       borderRadius: "16px",
       border: "1px solid rgba(184,134,11,0.12)",
       textAlign: "center",
@@ -338,7 +369,7 @@ function OnboardingGuard({ onOpenGoalModal, onTabChange }: { onOpenGoalModal: ()
         width: "100%", padding: "12px",
         background: "transparent",
         border: "1px solid rgba(184,134,11,0.15)",
-        borderRadius: "10px", color: "#6B5B45", fontSize: "12px",
+        borderRadius: "10px", color: "#8B7B65", fontSize: "12px",
         cursor: "pointer", fontFamily: "'Noto Serif KR', serif",
         letterSpacing: "1px",
       }}>
@@ -358,7 +389,7 @@ function GoalStatusCard({ goalStatus, onOpenGoalModal, onTabChange }: {
   return (
     <div style={{
       marginBottom: "20px", padding: "16px",
-      background: "rgba(184,134,11,0.06)",
+      background: "rgba(184,134,11,0.1)",
       borderRadius: "12px",
       border: "1px solid rgba(184,134,11,0.12)",
     }}>
@@ -366,7 +397,7 @@ function GoalStatusCard({ goalStatus, onOpenGoalModal, onTabChange }: {
         display: "flex", justifyContent: "space-between", alignItems: "center",
         marginBottom: "12px",
       }}>
-        <div style={{ fontSize: "11px", letterSpacing: "3px", color: "#6B5B45" }}>
+        <div style={{ fontSize: "11px", letterSpacing: "3px", color: "#8B7B65" }}>
           오늘의 목표
         </div>
         {!allSet && (
@@ -386,7 +417,7 @@ function GoalStatusCard({ goalStatus, onOpenGoalModal, onTabChange }: {
           <div key={cat.id} style={{
             display: "flex", alignItems: "center", gap: "10px",
             padding: "8px 10px",
-            background: goal ? (goal.completed ? "rgba(184,134,11,0.08)" : "rgba(0,0,0,0.1)") : "rgba(0,0,0,0.05)",
+            background: goal ? (goal.completed ? "rgba(184,134,11,0.08)" : "rgba(255,255,255,0.05)") : "rgba(255,255,255,0.03)",
             borderRadius: "8px",
             border: goal ? `1px solid ${cat.color}20` : "1px dashed rgba(184,134,11,0.1)",
           }}>
@@ -396,20 +427,20 @@ function GoalStatusCard({ goalStatus, onOpenGoalModal, onTabChange }: {
               {goal ? (
                 <div style={{
                   fontSize: "13px",
-                  color: goal.completed ? "#6B5B45" : "#E8DCC8",
+                  color: goal.completed ? "#8B7B65" : "#E8DCC8",
                   textDecoration: goal.completed ? "line-through" : "none",
                   overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap",
                 }}>
                   {goal.title}
                 </div>
               ) : (
-                <div style={{ fontSize: "11px", color: "#4A3F30" }}>미설정</div>
+                <div style={{ fontSize: "11px", color: "#6A5F50" }}>미설정</div>
               )}
             </div>
             {goal && (
               <span style={{
                 fontSize: "12px", flexShrink: 0,
-                color: goal.completed ? "#B8860B" : "#4A3F30",
+                color: goal.completed ? "#B8860B" : "#6A5F50",
               }}>
                 {goal.completed ? "✓" : "○"}
               </span>
@@ -431,10 +462,10 @@ function ExistingLog({ data }: { data: PracticeData }) {
   return (
     <div style={{
       marginTop: "20px", padding: "16px 20px",
-      background: "rgba(0,0,0,0.15)", borderRadius: "12px",
+      background: "rgba(255,255,255,0.06)", borderRadius: "12px",
       border: "1px solid rgba(184,134,11,0.08)",
     }}>
-      <div style={{ fontSize: "11px", letterSpacing: "2px", color: "#6B5B45", marginBottom: "10px" }}>
+      <div style={{ fontSize: "11px", letterSpacing: "2px", color: "#8B7B65", marginBottom: "10px" }}>
         오늘 누적 기록
       </div>
       <div style={{ display: "flex", justifyContent: "space-around" }}>
@@ -443,7 +474,7 @@ function ExistingLog({ data }: { data: PracticeData }) {
             <div style={{ fontSize: "18px", fontFamily: "'Crimson Pro', serif", color: "#B8860B" }}>
               {(existingLog[cat.id as keyof PracticeLog] as number) || 0}
             </div>
-            <div style={{ fontSize: "10px", color: "#5A4E3A", marginTop: "2px" }}>{cat.name} (분)</div>
+            <div style={{ fontSize: "10px", color: "#7A6E5A", marginTop: "2px" }}>{cat.name} (분)</div>
           </div>
         ))}
       </div>

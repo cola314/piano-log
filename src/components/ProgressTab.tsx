@@ -42,7 +42,7 @@ export function ProgressTab({ data, selectedDate, weekKey, monthKey, onOpenGoalM
                   <span style={{ color: cat.color, fontSize: "18px" }}>{cat.icon}</span>
                   <span style={{ fontSize: "15px", fontWeight: "500" }}>{cat.name}</span>
                 </div>
-                <div style={{ fontSize: "11px", color: "#6B5B45", marginTop: "4px", letterSpacing: "1px" }}>
+                <div style={{ fontSize: "11px", color: "#8B7B65", marginTop: "4px", letterSpacing: "1px" }}>
                   {cat.cycle} · {cat.daily}
                 </div>
               </div>
@@ -58,12 +58,12 @@ export function ProgressTab({ data, selectedDate, weekKey, monthKey, onOpenGoalM
             {goal ? (
               <div onClick={() => onToggleGoal(cat.id, key)} style={{
                 display: "flex", alignItems: "center", gap: "10px", padding: "12px",
-                background: goal.completed ? "rgba(184,134,11,0.1)" : "rgba(0,0,0,0.15)",
+                background: goal.completed ? "rgba(184,134,11,0.1)" : "rgba(255,255,255,0.06)",
                 borderRadius: "8px", cursor: "pointer", transition: "all 0.2s",
               }}>
                 <div style={{
                   width: "20px", height: "20px", borderRadius: "50%",
-                  border: `2px solid ${goal.completed ? "#B8860B" : "#4A3F30"}`,
+                  border: `2px solid ${goal.completed ? "#B8860B" : "#6A5F50"}`,
                   display: "flex", alignItems: "center", justifyContent: "center",
                   fontSize: "12px", color: "#B8860B", flexShrink: 0,
                 }}>
@@ -72,15 +72,15 @@ export function ProgressTab({ data, selectedDate, weekKey, monthKey, onOpenGoalM
                 <span style={{
                   fontSize: "14px",
                   textDecoration: goal.completed ? "line-through" : "none",
-                  color: goal.completed ? "#6B5B45" : "#E8DCC8",
+                  color: goal.completed ? "#8B7B65" : "#E8DCC8",
                 }}>
                   {goal.title}
                 </span>
               </div>
             ) : (
               <div style={{
-                padding: "14px", textAlign: "center", fontSize: "12px", color: "#4A3F30",
-                background: "rgba(0,0,0,0.1)", borderRadius: "8px", border: "1px dashed rgba(184,134,11,0.15)",
+                padding: "14px", textAlign: "center", fontSize: "12px", color: "#6A5F50",
+                background: "rgba(255,255,255,0.05)", borderRadius: "8px", border: "1px dashed rgba(184,134,11,0.15)",
               }}>
                 목표를 설정해 보세요
               </div>
@@ -107,7 +107,7 @@ function CompletedGoals({ data }: { data: PracticeData }) {
   return (
     <div style={{ marginTop: "28px" }}>
       <div style={{
-        fontSize: "11px", letterSpacing: "3px", color: "#6B5B45",
+        fontSize: "11px", letterSpacing: "3px", color: "#8B7B65",
         marginBottom: "14px", paddingBottom: "8px", borderBottom: "1px solid rgba(184,134,11,0.1)",
       }}>
         완료 기록
@@ -121,13 +121,13 @@ function CompletedGoals({ data }: { data: PracticeData }) {
             <span style={{ color: item.cat.color, fontSize: "14px" }}>{item.cat.icon}</span>
             <div style={{ flex: 1 }}>
               <div style={{ fontSize: "13px" }}>{item.title}</div>
-              <div style={{ fontSize: "10px", color: "#5A4E3A" }}>{item.key}</div>
+              <div style={{ fontSize: "10px", color: "#7A6E5A" }}>{item.key}</div>
             </div>
             <span style={{ color: "#B8860B", fontSize: "12px" }}>✓</span>
           </div>
         ))
       ) : (
-        <div style={{ fontSize: "12px", color: "#4A3F30", textAlign: "center", padding: "16px 0" }}>
+        <div style={{ fontSize: "12px", color: "#6A5F50", textAlign: "center", padding: "16px 0" }}>
           아직 완료한 목표가 없습니다
         </div>
       )}

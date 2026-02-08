@@ -2,10 +2,10 @@
   "name": "Piano Practice Log",
   "short_name": "PianoLog",
   "description": "피아노 연습 진도 관리 앱",
-  "start_url": "/",
+  "start_url": "/piano-log/",
   "display": "standalone",
-  "background_color": "#1a1207",
-  "theme_color": "#1a1207",
+  "background_color": "#000000",
+  "theme_color": "#000000",
   "orientation": "portrait-primary",
   "icons": [
     {

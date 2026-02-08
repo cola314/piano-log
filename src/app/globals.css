@@ -4,13 +4,8 @@
   box-sizing: border-box;
 }
 
-html {
-  background-color: #0f0f1a;
-  min-height: 100vh;
-}
-
-body {
-  background-color: #0f0f1a;
+html, body {
+  background-color: #000;
   min-height: 100vh;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;

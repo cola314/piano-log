@@ -50,8 +50,8 @@ export function LogModal({ selectedDate, logForm, onFormChange, onSave, onClose 
                   style={{
                     padding: "6px 12px", borderRadius: "6px",
                     border: (logForm[cat.id as keyof PracticeLog] as number) === v ? `1px solid ${cat.color}` : "1px solid rgba(184,134,11,0.1)",
-                    background: (logForm[cat.id as keyof PracticeLog] as number) === v ? `${cat.color}25` : "rgba(0,0,0,0.2)",
-                    color: (logForm[cat.id as keyof PracticeLog] as number) === v ? "#F5E6C8" : "#6B5B45",
+                    background: (logForm[cat.id as keyof PracticeLog] as number) === v ? `${cat.color}25` : "rgba(255,255,255,0.08)",
+                    color: (logForm[cat.id as keyof PracticeLog] as number) === v ? "#F5E6C8" : "#8B7B65",
                     fontSize: "12px", cursor: "pointer", fontFamily: "'Crimson Pro', serif",
                   }}
                 >
@@ -63,14 +63,14 @@ export function LogModal({ selectedDate, logForm, onFormChange, onSave, onClose 
         ))}
 
         <div style={{ marginBottom: "20px" }}>
-          <div style={{ fontSize: "12px", color: "#6B5B45", marginBottom: "6px" }}>메모</div>
+          <div style={{ fontSize: "12px", color: "#8B7B65", marginBottom: "6px" }}>메모</div>
           <textarea
             value={logForm.note}
             onChange={(e) => onFormChange((f) => ({ ...f, note: e.target.value }))}
             placeholder="오늘의 연습 느낌..."
             rows={2}
             style={{
-              width: "100%", background: "rgba(0,0,0,0.2)",
+              width: "100%", background: "rgba(255,255,255,0.08)",
               border: "1px solid rgba(184,134,11,0.15)", borderRadius: "8px",
               padding: "10px", color: "#E8DCC8", fontSize: "13px",
               fontFamily: "'Noto Serif KR', serif", resize: "none", outline: "none", boxSizing: "border-box",
@@ -92,7 +92,7 @@ function ModalButton({ label, variant, onClick }: { label: string; variant: "pri
   return (
     <button onClick={onClick} style={{
       flex: 1, padding: "12px",
-      background: isPrimary ? "rgba(184,134,11,0.25)" : "rgba(0,0,0,0.3)",
+      background: isPrimary ? "rgba(184,134,11,0.25)" : "rgba(255,255,255,0.1)",
       border: isPrimary ? "1px solid rgba(184,134,11,0.4)" : "1px solid rgba(184,134,11,0.15)",
       borderRadius: "8px",
       color: isPrimary ? "#F5E6C8" : "#8B7355",

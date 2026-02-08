@@ -51,7 +51,7 @@ export function CalendarTab({ data, selectedDate, onSelectDate, viewMonth, onNav
       {/* Day Headers */}
       <div style={{ display: "grid", gridTemplateColumns: "repeat(7, 1fr)", gap: "2px", marginBottom: "4px" }}>
         {["월", "화", "수", "목", "금", "토", "일"].map((d) => (
-          <div key={d} style={{ textAlign: "center", fontSize: "10px", color: "#6B5B45", letterSpacing: "2px", padding: "6px 0" }}>
+          <div key={d} style={{ textAlign: "center", fontSize: "10px", color: "#8B7B65", letterSpacing: "2px", padding: "6px 0" }}>
             {d}
           </div>
         ))}
@@ -70,7 +70,7 @@ export function CalendarTab({ data, selectedDate, onSelectDate, viewMonth, onNav
               background: isSelected ? "rgba(184,134,11,0.25)" : isToday ? "rgba(184,134,11,0.08)" : "transparent",
               border: isToday ? "1px solid rgba(184,134,11,0.4)" : "1px solid transparent",
               borderRadius: "8px",
-              color: current ? (isSelected ? "#F5E6C8" : "#C4B49A") : "#3D3525",
+              color: current ? (isSelected ? "#F5E6C8" : "#C4B49A") : "#5D5545",
               fontSize: "13px", cursor: "pointer",
               display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: "3px",
               fontFamily: "'Crimson Pro', serif", transition: "all 0.2s",
@@ -91,7 +91,7 @@ export function CalendarTab({ data, selectedDate, onSelectDate, viewMonth, onNav
       {/* Selected Day Info */}
       <div style={{
         marginTop: "24px", padding: "20px",
-        background: "rgba(184,134,11,0.06)", borderRadius: "12px",
+        background: "rgba(184,134,11,0.1)", borderRadius: "12px",
         border: "1px solid rgba(184,134,11,0.12)",
       }}>
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "16px" }}>
@@ -120,7 +120,7 @@ export function CalendarTab({ data, selectedDate, onSelectDate, viewMonth, onNav
                   </div>
                   <div style={{
                     fontSize: "14px",
-                    color: mins > 0 ? "#B8860B" : "#4A3F30",
+                    color: mins > 0 ? "#B8860B" : "#6A5F50",
                     fontFamily: "'Crimson Pro', serif",
                     fontWeight: mins > 0 ? "500" : "300",
                   }}>
@@ -136,7 +136,7 @@ export function CalendarTab({ data, selectedDate, onSelectDate, viewMonth, onNav
             )}
           </div>
         ) : (
-          <div style={{ fontSize: "13px", color: "#5A4E3A", textAlign: "center", padding: "12px 0" }}>
+          <div style={{ fontSize: "13px", color: "#7A6E5A", textAlign: "center", padding: "12px 0" }}>
             아직 기록이 없습니다
           </div>
         )}
@@ -167,7 +167,7 @@ function SelectedDateGoals({ data, selectedDate }: { data: PracticeData; selecte
       background: "rgba(184,134,11,0.06)", borderRadius: "12px",
       border: "1px solid rgba(184,134,11,0.12)",
     }}>
-      <div style={{ fontSize: "11px", letterSpacing: "3px", color: "#6B5B45", marginBottom: "12px" }}>
+      <div style={{ fontSize: "11px", letterSpacing: "3px", color: "#8B7B65", marginBottom: "12px" }}>
         해당 주/월 목표
       </div>
       <div style={{ display: "flex", flexDirection: "column", gap: "6px" }}>
@@ -175,7 +175,7 @@ function SelectedDateGoals({ data, selectedDate }: { data: PracticeData; selecte
           <div key={cat.id} style={{
             display: "flex", alignItems: "center", gap: "10px",
             padding: "8px 10px",
-            background: goal ? "rgba(0,0,0,0.1)" : "transparent",
+            background: goal ? "rgba(255,255,255,0.05)" : "transparent",
             borderRadius: "6px",
             opacity: goal ? 1 : 0.4,
           }}>
@@ -184,21 +184,21 @@ function SelectedDateGoals({ data, selectedDate }: { data: PracticeData; selecte
               {goal ? (
                 <div style={{
                   fontSize: "13px",
-                  color: goal.completed ? "#6B5B45" : "#E8DCC8",
+                  color: goal.completed ? "#8B7B65" : "#E8DCC8",
                   textDecoration: goal.completed ? "line-through" : "none",
                   overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap",
                 }}>
                   {goal.title}
                 </div>
               ) : (
-                <div style={{ fontSize: "11px", color: "#4A3F30" }}>{cat.name} — 미설정</div>
+                <div style={{ fontSize: "11px", color: "#6A5F50" }}>{cat.name} — 미설정</div>
               )}
             </div>
-            <span style={{ fontSize: "10px", color: "#5A4E3A", flexShrink: 0 }}>
+            <span style={{ fontSize: "10px", color: "#7A6E5A", flexShrink: 0 }}>
               {cat.id === "sonatine" ? "월간" : "주간"}
             </span>
             {goal && (
-              <span style={{ fontSize: "12px", flexShrink: 0, color: goal.completed ? "#B8860B" : "#4A3F30" }}>
+              <span style={{ fontSize: "12px", flexShrink: 0, color: goal.completed ? "#B8860B" : "#6A5F50" }}>
                 {goal.completed ? "✓" : "○"}
               </span>
             )}
