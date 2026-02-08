@@ -1,65 +1,186 @@
-import Image from "next/image";
+'use client';
 
-export default function Home() {
+import { useState } from "react";
+import { usePracticeData } from "@/hooks/usePracticeData";
+import { useTimer } from "@/hooks/useTimer";
+import { getDayKey, getWeekKey, getMonthKey } from "@/lib/utils";
+import type { PracticeData, PracticeLog } from "@/lib/types";
+import { Header } from "@/components/Header";
+import { TabNav } from "@/components/TabNav";
+import { TodayTab } from "@/components/TodayTab";
+import { CalendarTab } from "@/components/CalendarTab";
+import { ProgressTab } from "@/components/ProgressTab";
+import { StatsTab } from "@/components/StatsTab";
+import { LogModal } from "@/components/LogModal";
+import { GoalModal } from "@/components/GoalModal";
+
+export default function PracticeTracker() {
+  const { data, save } = usePracticeData();
+  const timer = useTimer(data, save);
+
+  const [selectedDate, setSelectedDate] = useState(new Date());
+  const [viewMonth, setViewMonth] = useState({ year: new Date().getFullYear(), month: new Date().getMonth() });
+  const [activeTab, setActiveTab] = useState("today");
+  const [showLogModal, setShowLogModal] = useState(false);
+  const [showGoalModal, setShowGoalModal] = useState(false);
+  const [logForm, setLogForm] = useState<PracticeLog>({ hanon: 0, czerny: 0, sonatine: 0, note: "" });
+
+  const dayKey = getDayKey(selectedDate);
+  const weekKey = getWeekKey(selectedDate);
+  const monthKey = getMonthKey(selectedDate);
+
+  // Stats
+  const getWeeklyStats = () => {
+    const startOfWeek = new Date(selectedDate);
+    const dayOfWeek = (startOfWeek.getDay() + 6) % 7;
+    startOfWeek.setDate(startOfWeek.getDate() - dayOfWeek);
+    const stats = { hanon: 0, czerny: 0, sonatine: 0, days: 0 };
+    for (let i = 0; i < 7; i++) {
+      const d = new Date(startOfWeek);
+      d.setDate(d.getDate() + i);
+      const log = data.logs[getDayKey(d)];
+      if (log) {
+        stats.hanon += log.hanon || 0;
+        stats.czerny += log.czerny || 0;
+        stats.sonatine += log.sonatine || 0;
+        if ((log.hanon || 0) + (log.czerny || 0) + (log.sonatine || 0) > 0) stats.days++;
+      }
+    }
+    return stats;
+  };
+
+  const getStreak = () => {
+    let streak = 0;
+    const d = new Date();
+    while (true) {
+      const log = data.logs[getDayKey(d)];
+      if (log && ((log.hanon || 0) + (log.czerny || 0) + (log.sonatine || 0) > 0)) {
+        streak++;
+        d.setDate(d.getDate() - 1);
+      } else break;
+    }
+    return streak;
+  };
+
+  const weeklyStats = getWeeklyStats();
+  const streak = getStreak();
+
+  // Actions
+  const navMonth = (dir: number) => {
+    setViewMonth((prev) => {
+      let m = prev.month + dir;
+      let y = prev.year;
+      if (m < 0) { m = 11; y--; }
+      if (m > 11) { m = 0; y++; }
+      return { year: y, month: m };
+    });
+  };
+
+  const openLogModal = () => {
+    const existing = data.logs[dayKey];
+    setLogForm(existing || { hanon: 0, czerny: 0, sonatine: 0, note: "" });
+    setShowLogModal(true);
+  };
+
+  const handleSaveLog = () => {
+    save({ ...data, logs: { ...data.logs, [dayKey]: { ...logForm, date: dayKey } } });
+    setShowLogModal(false);
+  };
+
+  const handleSaveGoal = (category: string, title: string) => {
+    const key = category === "sonatine" ? monthKey : weekKey;
+    const catKey = category as keyof PracticeData["goals"];
+    save({
+      ...data,
+      goals: {
+        ...data.goals,
+        [catKey]: { ...data.goals[catKey], [key]: { title, completed: false } },
+      },
+    });
+    setShowGoalModal(false);
+  };
+
+  const toggleGoalComplete = (cat: string, key: string) => {
+    const catKey = cat as keyof PracticeData["goals"];
+    save({
+      ...data,
+      goals: {
+        ...data.goals,
+        [catKey]: {
+          ...data.goals[catKey],
+          [key]: { ...data.goals[catKey][key], completed: !data.goals[catKey][key]?.completed },
+        },
+      },
+    });
+  };
+
   return (
-    <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex min-h-screen w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
+    <div style={{
+      minHeight: "100vh",
+      background: "linear-gradient(160deg, #1a1207 0%, #2a1f0e 30%, #1e1e2e 70%, #0f0f1a 100%)",
+      fontFamily: "'Noto Serif KR', 'Georgia', serif",
+      color: "#E8DCC8",
+    }}>
+      <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@300;400;500;600;700&family=Crimson+Pro:wght@300;400;500;600&display=swap" rel="stylesheet" />
+      <style>{`
+        @keyframes pulse {
+          0%, 100% { opacity: 1; }
+          50% { opacity: 0.5; }
+        }
+      `}</style>
+
+      <Header streak={streak} weeklyStats={weeklyStats} />
+      <TabNav activeTab={activeTab} onTabChange={setActiveTab} />
+
+      <div style={{ padding: "20px", maxWidth: "480px", margin: "0 auto" }}>
+        {activeTab === "today" && (
+          <TodayTab
+            data={data}
+            timer={timer}
+            weekKey={weekKey}
+            monthKey={monthKey}
+            onOpenGoalModal={() => setShowGoalModal(true)}
+            onTabChange={setActiveTab}
+          />
+        )}
+        {activeTab === "calendar" && (
+          <CalendarTab
+            data={data}
+            selectedDate={selectedDate}
+            onSelectDate={setSelectedDate}
+            viewMonth={viewMonth}
+            onNavMonth={navMonth}
+            onOpenLogModal={openLogModal}
+          />
+        )}
+        {activeTab === "progress" && (
+          <ProgressTab
+            data={data}
+            selectedDate={selectedDate}
+            weekKey={weekKey}
+            monthKey={monthKey}
+            onOpenGoalModal={() => setShowGoalModal(true)}
+            onToggleGoal={toggleGoalComplete}
+          />
+        )}
+        {activeTab === "stats" && <StatsTab data={data} weeklyStats={weeklyStats} onDataImport={save} />}
+      </div>
+
+      {showLogModal && (
+        <LogModal
+          selectedDate={selectedDate}
+          logForm={logForm}
+          onFormChange={setLogForm}
+          onSave={handleSaveLog}
+          onClose={() => setShowLogModal(false)}
         />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
-        </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
-      </main>
+      )}
+      {showGoalModal && (
+        <GoalModal
+          onSave={handleSaveGoal}
+          onClose={() => setShowGoalModal(false)}
+        />
+      )}
     </div>
   );
 }
