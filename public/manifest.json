@@ -4,8 +4,8 @@
   "description": "피아노 연습 진도 관리 앱",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#ffffff",
-  "theme_color": "#3b82f6",
+  "background_color": "#1a1207",
+  "theme_color": "#1a1207",
   "orientation": "portrait-primary",
   "icons": [
     {

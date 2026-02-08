@@ -4,7 +4,8 @@
   box-sizing: border-box;
 }
 
-body {
+html, body {
+  background: #1a1207;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
